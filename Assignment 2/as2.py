@@ -1,197 +1,100 @@
 #Shardar Mohammed Quraishi
 #UCID: 30045559
-#05 Nov 2017
-#Assignment 3
-#successfully solved all 3 parts of the program
+#22 Oct 2017
+#Assignment 2
 
+#importing turtle and random modules
 
+import turtle
 import random
-#Introduction to the game and setting up the input
-def start_Game():
-	print("Welcome to the game of nuts!")
-	nuts=int(input("How many nuts are there on the table initially (10-100)? "))
-	while(nuts<10 or nuts>100):
-		nuts=int(input("Enter a number between 10 and 100: "))
-	return nuts
-#setting up the options, and asking for which game mode to play
-def game_Mode():
-	print("Options: ")
-	print("Play against a friend (1)")
-	print("Play against the computer (2)")
-	print("Play against the trained computer (3)")
-	game_Option=int(input("Which option do you take (1-3): "))
-	while(game_Option<1 or game_Option>3):
-		game_Option=int(input("Which option do you take (1-3): "))
-	return game_Option
-#defining the human vs human function
-def player_Vs_Player(nuts):
-	while(nuts>0):
-		nuts = player_Turn("Player 1", nuts)
-		if nuts<=0:
-			print("Player 1, you lose.")
-			continue
-		nuts = player_Turn("Player 2", nuts)
-		if nuts<=0:
-			print("Player 2, you lose.")
-#defining function choosing nuts
-def player_Turn(player, nuts):
-	print("There are", nuts, "nuts on the board")
-	choose_Nuts = int(input(player+": How many nuts do you take? (1-3) "))
-	while(choose_Nuts<1 or choose_Nuts>3):
-		choose_Nuts = int(input("Choose between 1 and 3 nuts! "))
-		continue
-	nuts -= choose_Nuts
-	return nuts
 
-#initializing hats with nuts
-def hats(nuts):
-	hats = []
-	for i in range (nuts):
-		row = [1, 1, 1]
-		hats += [row]
-	return hats
 
-def makeHatsBeside(nuts):#init hats with beside
-	hatsBeside = []
-	for i in range (nuts):
-		row = [0, 0, 0]
-		hatsBeside += [row]
-	return hatsBeside
+count = 0;
+scorekeeper = turtle.Turtle();
 
-def p_1(nuts,hats):
-
-	for i in s:
-		print (s)
-		if i == nuts_number:
-			return i
-			print (i)
-
-def select(p, nuts):#Ai selection
-
-	total = p[0] + p[1] + p[2]
-	r_int = random.randint(1, total)
-	if r_int <= p[0]:
-		move = 0
-	elif (r_int <= p[0] + p[1]):
-		move = 1
+#defining function for Alex which will move taking specific inputs from the user inorder to move
+def Alex_movement(Alex):
+	u=30
+	k=45
+	direction = input("please enter direction: ")
+	if(direction == "w"):
+		Alex.forward(u)
+	elif(direction == "a"):
+		Alex.left(k)
+	elif(direction == "d"):
+		Alex.right(k)
+	elif(direction == "s"):
+		Alex.bk(u)
 	else:
-		move = 2
-	return move
+		print('Invalid response, TRY AGAIN!')
+		return False
+#counting the number of times Alex was moved.    
+	global count
+	
+	count = count+1;
+	scorekeeper.clear()
+	scorekeeper.penup()
+	scorekeeper.hideturtle()
+	scorekeeper.setposition(50, -300)
+	scorestring = "Number of times Alex was moved: %d" %count
+	scorekeeper.write(scorestring,False, align="left", font=("Arial", 14, "normal"))
 
-
-def player_Vs_Ai(nuts):
-	runGameAi(hats(nuts),nuts)#init hats and send to runGameAI
-
-
-def runGameAi(hatsContent,nuts):
-	originalNuts = nuts
-	hatsBeside = makeHatsBeside(nuts)
-	while nuts >0:
-		nuts = player_Turn("Player 1", nuts)
-		if nuts <= 0:
-			print("Player 1, you lose.")
-			resetKnowledgeBaseAIWon(hatsContent, hatsBeside, originalNuts)
-			continueQues(hatsContent,originalNuts)
-
-		move = select(hatsContent[nuts], nuts)
-		hatsContent[nuts][move]-=1
-		hatsBeside[nuts][move]+=1
-		print("Ai picks: ", move+1, "nuts")
-		nuts -= (move+1)
-		if nuts <= 0:
-			print("AI, you lose.")
-			resetKnowledgeBaseAILost(hatsContent, hatsBeside, originalNuts)
-			continueQues(hatsContent,originalNuts)
-#resetting knowledge, throwing away all the balls
-def resetKnowledgeBaseAILost(hatsContent, hatsBeside, nuts):
-	for i in range(nuts):
-		for j in range (0,3):
-			hatsContent[i][j] += hatsBeside[i][j]
-	return
-#updating knowledge base when Ai wins
-def resetKnowledgeBaseAIWon(hatsContent, hatsBeside, nuts):
-	for i in range(nuts):
-		for j in range (0,3):
-			if(hatsBeside[i][j] != 0):
-				hatsContent[i][j] += (hatsBeside[i][j]+1)
-	return
-
-#defining functions for asking question if the palyer wants to play again
-def continueQues(hatsContent,originalNuts):
-	continueVariable = int(input("Play again (1 = yes, 0 = no)? "))
-	if(continueVariable == 1):
-		runGameAi(hatsContent,originalNuts)
+	
+#defining function for the movement of Alice. Where 2/3rd of Alice's movement is forward and the rest is either right or left.
+def Alice_movement(Alice):
+	g=20
+	b=90
+	movement = random.randint(1,3)
+	angle = random.randint(1,2)
+	if(movement != 3):
+		Alice.forward(g)
 	else:
-		main()
+		if(angle == "1"):
+			Alice.right(b)
+		else:
+			Alice.left(b)
 
+#defining a function for calculating the distance between the Alex and Alice			
+def check_distance(turtle1, turtle2):
+	distance = turtle1.distance(turtle2)
+	return distance
 
-#defing function for human vs trained Ai, and also training the Ai
-def player_Vs_trainedAi(nuts):
-	print("Training AI... please wait.")
-	originalNuts = nuts
-	hatsContentAi1 = hats(nuts)
-	hatsContentAi2 = hats(nuts)
-	hatsBesideAi1 = makeHatsBeside(nuts)
-	hatsBesideAi2 = makeHatsBeside(nuts)
-#training the Ai by making them play against each other for 100000 times
-	for i in range (0,100000):
-		nuts = originalNuts
+#defining a function where the game is run, Alex and Alice functions are called. There is a while loop in which the contents are run until the conditions are fulfilled.	
+def play(turtle1, turtle2):
+	while (check_distance(turtle1, turtle2) > 30):
+		Alex_movement(turtle1)
+		Alice_movement(turtle2)
+	#setting up commands for the distance between the two turtles to be displayed on the turtle screen.
+		global distance
+		distance = turtle1.distance(turtle2)
+		scorekeeper.setposition(-300, 300)
+		distance = turtle1.distance(turtle2)
+		distancestring = "Distance between Alex & Alice: %d" %distance
+		scorekeeper.write(distancestring,False, align="left", font=("Arial", 14, "normal"))
+	print(":.:Game over:.: Alex caught Alice:.:")
+#this is the main function which calls upon all the functions defined and plays a major rule for the smooth running of the program. This also contains turtle and the screen properties.
+def main():		
+	tScreen = turtle.Screen()
+	WIDTH = 500
+	HEIGHT = 500
+	tScreen.screensize(WIDTH,HEIGHT)
+	Alex = turtle.Turtle()
+	Alex.color("Blue")
+	Alex.shape("turtle")
 
-		while nuts > 0:
-			move = select(hatsContentAi1[nuts-1], nuts)
-			hatsContentAi1[nuts-1][move]-=1 #sub 1 from hatsContent(nuts)[move]
-			hatsBesideAi1[nuts-1][move]+=1 #add 1 to hatsBeside(nuts)[move]
-			nuts -= (move+1)
-			if nuts <= 0:
-				resetKnowledgeBaseAILost(hatsContentAi1, hatsBesideAi1, originalNuts)
-				resetKnowledgeBaseAIWon(hatsContentAi2, hatsBesideAi2, originalNuts)
-
-
-			move = select(hatsContentAi2[nuts-1], nuts)
-			hatsContentAi2[nuts-1][move]-=1 #sub 1 from hatsContent(nuts)[move]
-			hatsBesideAi2[nuts-1][move]+=1 #add 1 to hatsBeside(nuts)[move]
-			nuts -= (move+1)
-			if nuts <= 0:
-				resetKnowledgeBaseAILost(hatsContentAi2, hatsBesideAi2, originalNuts)
-				resetKnowledgeBaseAIWon(hatsContentAi1, hatsBesideAi1, originalNuts)
-	#training ends here--------------now adding the Knowledgebase of both AI's
-	nuts = originalNuts
-	for i in range(nuts):
-		for j in range (0,3):
-			hatsContentAi1[i][j] += hatsContentAi2[i][j]
-	print(hatsContentAi1) #print the table contents after training the Ai
-
-
-
-	while nuts >0:
-		nuts = player_Turn("Player 1", nuts)
-		if nuts <= 0:
-			print("Player 1, you lose.")
-			continueQues(hatsContentAi1,originalNuts)
-
-		move = select(hatsContentAi1[nuts], nuts)
-		print("Ai picks: ", move+1, "nuts")
-		nuts -= (move+1)
-		if nuts <= 0:
-			print("AI, you lose.")
-			continueQues(hatsContentAi1,originalNuts)
-
-#defining the main function, the programs starts here
-def main():
-	nuts = start_Game()
-	option = game_Mode()
-	#player_Vs_trainedAi(nuts)
-	#player_Vs_Ai(nuts)
-	if(option == 1):
-		player_Vs_Player(nuts)
-	elif(option == 2):
-		player_Vs_Ai(nuts)
-	elif(option == 3):
-		player_Vs_trainedAi(nuts)
-	else:
-		print("invalid input")
-
-
-
+	Alice = turtle.Turtle()
+	Alice.color("Red")
+	Alice.shape("turtle")
+	x1 = random.randint(-250, 250)
+	y1 = random.randint(-250, 250)
+	
+	Alice.pu()
+	Alice.setposition(x1, y1)
+	Alice.pd()
+	play(Alex, Alice)
+	#print(check_distance(Alex, Alice))
+	print("Number of times Alex was moved ", count)
+		
+	tScreen.mainloop()
+	
 main()
-wn.mainloop()
